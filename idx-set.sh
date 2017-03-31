@@ -1,0 +1,54 @@
+#!/bin/bash
+########################################################
+# This one sets an info to a file like a tag or a name #
+alias errcho='>&2 echo'
+name=${1}
+shift
+while read id
+do
+	loc=${HOME}/.idx_data/${id}
+	#loc=dbg
+	if [[ ! -d ${loc} ]]
+	then
+		errcho "ID ${id} is not indexed, skipping!"
+		continue
+	fi
+	if [[ ! -f ${loc}/${name} ]]
+	then 
+		# we dont have to check if there are no tags yet 
+		for value in $@
+		do
+			echo ${value} >> ${loc}/${name}
+		done
+	else
+		( 
+			declare -A temp
+			
+			output=()
+
+			while read s
+			do 
+				output=("${output[@]}" "${s}")
+				((temp[${s}]++))
+			done
+			for s in "${@}"
+			do
+				if [[ -n ${temp[${s}]} ]]
+				then
+					continue
+				else
+					output=("${output[@]}" "${s}")
+				fi
+			done
+
+			(
+				for value in "${output[@]}" 
+				do
+					echo ${value}
+				done
+			) > ${loc}/${name}
+		) < ${loc}/${name} 
+	fi
+	echo ${id}
+done
+
