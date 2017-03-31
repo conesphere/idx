@@ -1,34 +1,39 @@
 #!/bin/bash
-##############################################
-# This one adds a pdf file to the repository #
-file=${1}
-shift
-if [[ ! -f ${file} ]]
-then
-	echo File ${file} does not exist
-	echo "Usage: $0 ID [FILENAME]"
-	exit 1
-fi
-id=$(sha256sum -b ${file})
-id=${id% *}
-echo document id is ${id}
-loc=${HOME}/.idx_data/${id}
-if [[ -d ${loc} ]]
-then
-	echo Document ${loc} already exist in repository 
-	echo  use idx-upd to add this document 
-fi
-mkdir -p ${loc}
-mv ${file} ${loc}/data
-ln -s ${loc}/data ${file}
-# do basename just in case
-file=${file##*/}
-# save name
-echo ${file} >> ${loc}/name
-# save document tags
-for t in $@
+############################################################
+# This one recieves a list of file ids from the repository #
+alias errcho='>&2 echo "${0}:"'
+while read id
 do
-	echo ${t} >> ${loc}/tag
+	loc=${HOME}/.idx_data/${id}
+	if [[ ! -d ${loc} ]]
+	then
+		errcho "ID ${id} does not exist in index, skipping"
+		continue
+	fi
+	if [[ ! -f ${loc}/data ]]
+	then
+		errcho "Data of ${id} does not exist in index, skipping"
+		continue
+	fi
+	# now lets find a useable filename and go ahead... 
+	if [[ ! -f ${loc}/name ]] 
+	then 
+		name=${id}
+	else
+		read name < ${loc}/${name}
+	fi
+	if [[ -e ${name} ]]
+	then
+		readlink ${name} | read tloc
+		if [[ "${tloc}" = "${loc}/data" ]]
+		then
+			# nothing left to do, skip it
+			continue
+		fi 	
+		errcho "File ${name} already exist locally skipping"
+		continue
+	fi
+	ln -s ${loc}/data ${name}
+	echo ${name}
 done
-date '+%Y-%m-%d %H:%M:%S' > ${loc}/date_add
 
