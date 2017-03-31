@@ -25,13 +25,13 @@ do
 	else
 		mkdir -p ${loc}
 		mv ${file} ${loc}/data
+		chmod 444 ${loc}/data
 	fi
 	ln -s ${loc}/data ${file}
 	# do basename just in case
 	file=${file##*/}
 	# save name
-	# TODO create a save file ADD here 
-	echo ${file} >> ${loc}/name
+	echo ${id} | idx_set name "${file}" > /dev/null
 	if [[ ! -f ${loc}/date_add ]]
 	then
 		date '+%Y-%m-%d %H:%M:%S' > ${loc}/date_add
