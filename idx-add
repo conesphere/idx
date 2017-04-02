@@ -9,8 +9,23 @@ do
 		errcho "File ${file} does not exist skipping"
 		continue
 	fi
-	id=$(sha256sum -b ${file})
-	id=${id% *}
+	if [[ -L ${file} ]]
+	then
+		link=$(readlink "${file}")
+		if [[ ${link} = */data ]]
+		then
+			id=${link%/data}
+			id=${id##*/}
+		else
+			errcho "File ${file} is a symlink but not pointing to idx store, skipping"
+			continue
+		fi
+	else
+		# regular file, not indexed yet 
+		id=$(sha256sum -b ${file})
+		id=${id% *}
+	fi
+	
 	loc=${HOME}/.idx_data/${id}
 	if [[ -d ${loc} ]]
 	then
