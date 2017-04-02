@@ -32,9 +32,16 @@ do
 	file=${file##*/}
 	# save name
 	echo ${id} | idx_set name "${file}" > /dev/null
-	if [[ ! -f ${loc}/date_add ]]
+	if [[ ! -f ${loc}/datetime ]]
 	then
-		date '+%Y-%m-%d %H:%M:%S' > ${loc}/date_add
+		date=$(date '+%Y-%m-%d %H:%M:%S')
+		echo "${date}" > ${loc}/datetime
+		echo "${date:0:4}" > ${loc}/year
+		echo "${date:5:2}" > ${loc}/month
+		echo "${date:8:2}" > ${loc}/day
+		echo "${date:11:2}" > ${loc}/hour
+		echo "${date:14:2}" > ${loc}/minute
+		echo "${date:17:2}" > ${loc}/second
 	fi
 	if [[ ! -f ${loc}/mimetype ]]
 	then
