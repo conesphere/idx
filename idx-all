@@ -1,0 +1,3 @@
+#!/bin/bash
+loc=${HOME}/.idx_data/${id}
+ls | cat
