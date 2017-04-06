@@ -3,7 +3,7 @@
 
 DESTDIR= 
 PREFIX=/usr/bin
-TARGETS=$(wildcard idx-*)
+TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/,$(wildcard idx-*))
 
 all:
 	echo use: make install for installation
@@ -26,7 +26,7 @@ all:
 clean:
 	rm -f .checkdeps install
 
-install: .checkdeps $(TARGETS) 
+install: .checkdeps $(TARGETS)
 	@touch install
 	@echo done
 
@@ -36,7 +36,7 @@ uninstall:  $(TARGETS)
 	@echo done
 
 $(DESTDIR)$(PREFIX):
-	echo install -d $@
+	install -d $@
 	
 $(DESTDIR)$(PREFIX)/%: % $(DESTDIR)$(PREFIX)
 	install $< $@
