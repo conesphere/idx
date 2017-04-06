@@ -4,22 +4,20 @@
 DESTDIR= 
 PREFIX=/usr/bin
 TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/,$(wildcard idx-*))
+DEPS=sha256sum date file bash
 
 all:
 	echo use: make install for installation
 
-.checkdeps:
-	@echo testing sha256sum
-	@which sha256sum
-	@echo -------------------
-	@echo testing date
-	@which date
-	@echo -------------------
-	@echo testing file
-	@which file
-	@echo -------------------
-	@echo testing bash
+.checkdeps: $(addprefix .which-,$(DEPS))
+	@echo testing /bin/bash
 	@which /bin/bash
+	@echo -------------------
+	@touch $@
+
+.which-%:
+	@echo testing 
+	@which $(patsubst .which-%,%,$@)
 	@echo -------------------
 	@touch $@
 
