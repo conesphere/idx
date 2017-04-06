@@ -10,7 +10,12 @@ TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/,$(wildcard idx-*))
 DEPS=sha256sum date file bash
 
 all:
-	echo use: make install for installation
+	@echo usage:
+	@echo make install
+	@echo make PREFIX=~/bin install
+	@echo make DESTDIR=/tmp/urpackagebase install
+	@echo make uninstall
+	@echo make clean
 
 .checkdeps: $(addprefix .which-,$(DEPS))
 	@echo testing /bin/bash
@@ -25,7 +30,7 @@ all:
 	@touch $@
 
 clean:
-	rm -f .checkdeps install
+	rm -f .checkdeps install $(addprefix .which-,$(DEPS))
 
 install: .checkdeps $(TARGETS)
 	@touch install
