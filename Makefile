@@ -1,8 +1,11 @@
 #!/usr/bin/make 
 # install an uninstall that beast 
 
+# variables to be set externally
 DESTDIR= 
 PREFIX=/usr/bin
+
+# variables used by make 
 TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/,$(wildcard idx-*))
 DEPS=sha256sum date file bash
 
@@ -16,7 +19,7 @@ all:
 	@touch $@
 
 .which-%:
-	@echo testing 
+	@echo testing depency
 	@which $(patsubst .which-%,%,$@)
 	@echo -------------------
 	@touch $@
