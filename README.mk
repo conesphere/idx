@@ -18,12 +18,12 @@ to put some files in the index:
 
 to get all files tagged unread: 
 
-`idx-all | idx-filter tag unread |  idx-filter -e mimetype "*pdf*" | idx-get`
+`idx lsall | idx filter tag unread |  idx filter -e mimetype "*pdf*" | idx get`
 
 
 to get all files tagged unread: 
 
-`idx-all | idx-filter tag unread |  idx-filter -e mimetype "*pdf*" | idx-get`
+`idx all | idx filter tag unread |  idx filter -e mimetype "*pdf*" | idx get`
 
 
 - idx-add
