@@ -9,7 +9,7 @@ export IDX_DIR PATH PREFIX
 IDX_DIR=${IDX_DIR:=~/.idx_data}
 
 # parsing command line args 
-while [[ ("${1}" = -*) -a ( -n "${1}" ) ]]
+while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
 do
 	if [[ "${1}" = "-d" ]]
 	then

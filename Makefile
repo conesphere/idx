@@ -4,16 +4,16 @@
 # variables to be set externally
 DESTDIR= 
 PREFIX=/usr/local
-EXTDIR=/share/idx
+EXTDIR=share/idx
 
 # variables used by make 
-TARGETS=$(addprefix $(DESTDIR)$(PREFIX)$(EXTDIR)/,$(wildcard idx-*)) $(addprefix $(DESTDIR)$(PREFIX)/bin/,idx)
+TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/$(EXTDIR)/,$(wildcard idx-*)) $(addprefix $(DESTDIR)$(PREFIX)/bin/,idx)
 DEPS=sha256sum date file bash
 
 all:
 	@echo usage:
 	@echo make install
-	@echo make PREFIX=~/bin EXTDIR=~/.idx-extensions install
+	@echo make PREFIX=~ EXTDIR=.idx-extensions install
 	@echo make DESTDIR=/tmp/urpackagebase install
 	@echo make uninstall
 	@echo make clean
@@ -42,10 +42,10 @@ uninstall:  $(TARGETS)
 	rm -f install
 	@echo done
 
-$(DESTDIR)$(PREFIX)$(EXTDIR):
+$(DESTDIR)$(PREFIX)/$(EXTDIR):
 	install -d $@
 	
-$(DESTDIR)$(PREFIX)$(EXTDIR)/idx-%: idx-% $(DESTDIR)$(PREFIX)$(EXTDIR)
+$(DESTDIR)$(PREFIX)/$(EXTDIR)/idx-%: idx-% $(DESTDIR)$(PREFIX)/$(EXTDIR)
 	install $< $@
 
 $(DESTDIR)$(PREFIX)/bin:
