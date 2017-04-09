@@ -1,18 +1,13 @@
 #!/bin/bash
 ########################################################
 # This one sets an info to a file like a tag or a name #
-alias errcho='>&2 echo "${0}:"'
 name=${1}
 shift
 while read id
 do
-	loc=${HOME}/.idx_data/${id}
-	#loc=dbg
-	if [[ ! -d ${loc} ]]
-	then
-		errcho "ID ${id} is not indexed, skipping!"
-		continue
-	fi
+	gen_loc
+	test_loc
+
 	if [[ ! -f ${loc}/${name} ]]
 	then 
 		# we dont have to check if there are no tags yet 

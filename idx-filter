@@ -1,7 +1,6 @@
 #!/bin/bash
 ########################################################
 # This one sets an info to a file like a tag or a name #
-alias errcho='>&2 echo'
 filter_regex="true"
 if [[ ${1} == "-e" ]]
 then
@@ -12,12 +11,8 @@ name=${1}
 shift
 while read id
 do
-	loc=${HOME}/.idx_data/${id}
-	if [[ ! -d ${loc} ]]
-	then
-		errcho "ID ${id} is not indexed, skipping!"
-		continue
-	fi
+	gen_loc
+	test_loc
 	if [[ ! -f ${loc}/${name} ]]
 	then 
 		# we dont have to check if there are no tags 

@@ -1,0 +1,38 @@
+#!/bin/bash
+PREFIX=${0%/bin/*}
+# Make sure there is exact one share/idx path in the front
+pathadd="${HOME}/.idx-extensions:/etc/idx-extensions:${PREFIX}/share/idx"
+PATH="${pathadd}:${PATH#${pathadd}:}"
+unset pathadd
+alias errcho='>&2 echo "${0}:"'
+export IDX_DIR PATH PREFIX
+IDX_DIR=${IDX_DIR:=~/.idx_data}
+
+# parsing command line args 
+while [[ ("${1}" = -*) -a ( -n "${1}" ) ]]
+do
+	if [[ "${1}" = "-d" ]]
+	then
+		shift
+		IDX_DIR="${1}"
+		shift
+		continue
+	fi
+done
+
+alias gen_loc='loc=${IDX_DIR}/${id:0:6}/${id:6:6}/${id:12:6}/${id:18:6}/${id}'
+alias test_loc='if [[ ! -d ${loc} ]]
+then
+      errcho "ID ${id} is not indexed, skipping!"
+      continue
+fi
+'
+
+# because we dont have any switches left
+# we can push forward the command
+CMD="${1}"
+shift
+idx-${CMD} "${@}"
+
+# ensure that git annex stuff is ready and committed if needed
+
