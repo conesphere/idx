@@ -1,0 +1,2 @@
+#!/bin/bash
+ls ${IDX_DIR}/*/*/*/* | ( while read dir; do echo ${dir##*/} ; done ) 
