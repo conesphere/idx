@@ -1,7 +1,6 @@
 #!/bin/bash
 ##############################################
 # This one adds a pdf file to the repository #
-alias errcho='>&2 echo "${0}:"'
 while read file
 do
 	if [[ ! -f ${file} ]]
@@ -26,7 +25,8 @@ do
 		id=${id% *}
 	fi
 	
-	loc=${HOME}/.idx_data/${id}
+	gen_loc
+
 	if [[ -d ${loc} ]]
 	then
 		if [[ -f ${loc}/data ]]

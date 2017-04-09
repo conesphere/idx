@@ -3,10 +3,10 @@
 
 # variables to be set externally
 DESTDIR= 
-PREFIX=/usr/bin
+PREFIX=/usr/local
 
 # variables used by make 
-TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/,$(wildcard idx-*))
+TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/share/idx/,$(wildcard idx-*)) $(addprefix $(DESTDIR)$(PREFIX)/bin/,idx)
 DEPS=sha256sum date file bash
 
 all:
@@ -41,8 +41,15 @@ uninstall:  $(TARGETS)
 	rm -f install
 	@echo done
 
-$(DESTDIR)$(PREFIX):
+$(DESTDIR)$(PREFIX)/share/idx:
 	install -d $@
 	
-$(DESTDIR)$(PREFIX)/%: % $(DESTDIR)$(PREFIX)
+$(DESTDIR)$(PREFIX)/share/idx/idx-%: idx-% $(DESTDIR)$(PREFIX)/share/idx
 	install $< $@
+
+$(DESTDIR)$(PREFIX)/bin:
+	install -d $@
+
+$(DESTDIR)$(PREFIX)/bin/idx: idx $(DESTDIR)$(PREFIX)/bin
+	install $< $@
+
