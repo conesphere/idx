@@ -40,7 +40,7 @@ do
 		do
 			if [[ -L ${name} ]]
 			then
-				readlink ${name} | read tloc
+				tloc=$(readlink "${name}")
 				if [[ "${tloc}" = "${loc}/data" ]]
 				then
 					# nothing left to do, skip it
@@ -51,21 +51,23 @@ do
 			name=${name%-*}-${cnt}
 		done
 	else
-		cat ${loc}/name | (
+		name=$(cat ${loc}/name | (
 			while read name
 			do
-				if [[ ! -e ${name} ]]
+				if [[ ! -e "${name}" ]]
 				then
-					echo ${name}
+					echo "${name}"
 					exit
 				fi
-				if [[ -L ${name} ]]
+				if [[ -L "${name}" ]]
 				then
-					readlink ${name} | read tloc
+					tloc=$(readlink "${name}")
 					if [[ "${tloc}" = "${loc}/data" ]]
 					then
-						echo ${name}
+						echo "${name}"
 						exit
+					else
+						errcho "${tloc} vs ${loc}/data"
 					fi 	
 				fi
 			done
@@ -75,7 +77,7 @@ do
 			do
 				if [[ -L ${name} ]]
 				then
-					readlink ${name} | read tloc
+					tloc=$(readlink "${name}")
 					if [[ "${tloc}" = "${loc}/data" ]]
 					then
 						echo ${name}
@@ -87,9 +89,14 @@ do
 			done
 			echo ${name}
 			exit
-		) | read name 
+		))
 	fi
-	if [[ -L ${name} ]]
+	if [[ -z "${name}" ]]
+	then
+		errcho "Got no name at all for ${id} this is a bug, skipping"
+		continue
+	fi
+	if [[ -L "${name}" ]]
 	then
 		errcho "Name ${name} ${id} is already checked out, continue"
 		# nothing left to do, skip it
