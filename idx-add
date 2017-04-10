@@ -30,7 +30,7 @@ do
 
 	if [[ -d ${loc} ]]
 	then
-		if [[ -f ${loc}/data ]]
+		if [[ -a ${loc}/data ]]
 		then
 			errcho "File ${file} is already indexed updating record"
 			rm -f ${file}
