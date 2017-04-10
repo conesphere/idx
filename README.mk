@@ -1,21 +1,18 @@
-IDX Index
----------
+# IDX Index
 
 idx is an extensible indexing and search engine for pdf and other static 
 documents written in BASH
 
-Installation
-------------
+#Installation
 
 to /usr/local:
-`$ make install`
+'$ make install'
 
 to your $HOME: 
 `$ PREFIX=~ EXTDIR=.idx-extensions install`
 
 
-Usage
------
+#Usage
 
 An idx call typically has the form `idx COMMAND` 
 
@@ -54,14 +51,12 @@ to get all files tagged unread with the text Invoice in it:
 - idx savetext
 - idx greptext
 
-Storage
--------
+#Storage
 
 Data files are stored in $HOME/.idx-data if nothing else is known. 
 
 
-Extensions
-----------
+#Extensions
 
 You can easily write your own workflows using shellscripts. 
 
