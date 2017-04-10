@@ -1,4 +1,5 @@
 #!/bin/bash
+shopt -s expand_aliases
 PREFIX=${0%/bin/*}
 # Make sure there is exact one share/idx path in the front
 pathadd="${HOME}/.idx-extensions:/etc/idx-extensions:${PREFIX}/share/idx"
@@ -19,6 +20,7 @@ do
 		continue
 	fi
 	errcho "I dont understand parameter ${1}"
+	shift
 	continue
 done
 
@@ -33,6 +35,11 @@ fi
 # because we dont have any switches left
 # we can push forward the command
 CMD="${1}"
+if [[ -z "${CMD}" ]]
+then
+	errcho "I need a command to know what I should do"
+	exit 1
+fi
 shift
 idx-${CMD} "${@}"
 

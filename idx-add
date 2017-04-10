@@ -1,4 +1,5 @@
 #!/bin/bash
+shopt -s expand_aliases
 ##############################################
 # This one adds a pdf file to the repository #
 while read file
@@ -46,7 +47,7 @@ do
 	# do basename just in case
 	file=${file##*/}
 	# save name
-	echo ${id} | idx_set name "${file}" > /dev/null
+	echo ${id} | idx set name "${file}" > /dev/null
 	if [[ ! -f ${loc}/datetime ]]
 	then
 		date=$(date '+%Y-%m-%d %H:%M:%S')
