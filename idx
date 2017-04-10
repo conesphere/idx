@@ -7,7 +7,7 @@ EXTDIR="${HOME}/.idx-extensions /etc/idx-extensions ${PREFIX}/share/idx"
 #unset pathadd
 alias errcho='>&2 echo "${0}:"'
 export IDX_DIR PATH PREFIX
-IDX_DIR=${IDX_DIR:=~/.idx_data}
+IDX_DIR=${IDX_DIR:=~/.idx-data}
 
 # parsing command line args 
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
