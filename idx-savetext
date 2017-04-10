@@ -15,15 +15,13 @@ do
 	fi
 	read mimetype < ${loc}/mimetype
 	mimetype=${mimetype:="pdf"}
-	case mimetype in
-		*pdf*)
-			pdftotext ${loc}/data ${loc}/text
-		;;
-		*)
-			errcho "unknown mimetype ${mimetype} for id ${id} skipping"
-			continue
-		;; 
-	esac
-	echo ${id}
+	if [[ "${mimetype}" = *pdf* ]]
+	then 
+		pdftotext ${loc}/data ${loc}/text
+		echo ${id}
+		continue
+	fi
+	errcho "unknown mimetype ${mimetype} for id ${id} skipping"
+	continue
 done
 
