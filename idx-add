@@ -61,7 +61,7 @@ do
 	fi
 	if [[ ! -f ${loc}/mimetype ]]
 	then
-		file -b --mime-type ${file} > ${loc}/mimetype
+		file -L -b --mime-type ${loc}/data > ${loc}/mimetype
 	fi
 	echo ${id}
 done
