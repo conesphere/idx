@@ -5,35 +5,78 @@ shopt -s expand_aliases
 while read id
 do
 	gen_loc
-	if [[ ! -d ${loc} ]]
-	then
-		errcho "ID ${id} does not exist in index, skipping"
-		continue
-	fi
-	if [[ ! -f ${loc}/data ]]
+	test_loc
+	if [[ ! -a ${loc}/data ]]
 	then
 		errcho "Data of ${id} does not exist in index, skipping"
 		continue
 	fi
-	# now lets find a useable filename and go ahead... 
+	# now lets find a useable filename and go ahead...
 	if [[ ! -f ${loc}/name ]] 
 	then 
 		name=${id}
+		# we guess here that it is unlikely that a symlink known exactly as the id is in the 
+		# directory pointing to something else than the idxed data blob 
+		while [[ -e ${name} ]]
+		do
+			if [[ -L ${name} ]]
+			then
+				readlink ${name} | read tloc
+				if [[ "${tloc}" = "${loc}/data" ]]
+				then
+					# nothing left to do, skip it
+					break
+				fi 	
+			fi
+			cnt=$((${cnt}+1))
+			name=${name%-*}-${cnt}
+		done
 	else
-		read name < ${loc}/name
+		cat ${loc}/name | (
+			while read name
+			do
+				if [[ ! -e ${name} ]]
+				then
+					echo ${name}
+					exit
+				fi
+				if [[ -L ${name} ]]
+				then
+					readlink ${name} | read tloc
+					if [[ "${tloc}" = "${loc}/data" ]]
+					then
+						echo ${name}
+						exit
+					fi 	
+				fi
+			done
+			# if I am here that means we did not found a name useable
+			read name < ${loc}/name
+			while [[ -e ${name} ]]
+			do
+				if [[ -L ${name} ]]
+				then
+					readlink ${name} | read tloc
+					if [[ "${tloc}" = "${loc}/data" ]]
+					then
+						echo ${name}
+						exit
+					fi 	
+				fi
+				cnt=$((${cnt}+1))
+				name=${cnt}-${name#*-}
+			done
+			echo ${name}
+			exit
+		) | read name 
 	fi
-	if [[ -e ${name} ]]
+	if [[ -L ${name} ]]
 	then
-		readlink ${name} | read tloc
-		if [[ "${tloc}" = "${loc}/data" ]]
-		then
-			# nothing left to do, skip it
-			continue
-		fi 	
-		errcho "File ${name} already exist locally skipping"
-		continue
+		errcho "Name ${name} ${id} is already checked out, continue"
+		# nothing left to do, skip it
+	else
+		ln -s ${loc}/data ${name}
 	fi
-	ln -s ${loc}/data ${name}
 	echo ${name}
 done
 

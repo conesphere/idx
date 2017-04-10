@@ -31,6 +31,12 @@ then
       continue
 fi
 '
+alias test_data='if [[ ! -a ${loc}/data ]]
+then
+      errcho "ID ${id} has no data, skipping!"
+      continue
+fi
+'
 
 # because we dont have any switches left
 # we can push forward the command
