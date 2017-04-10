@@ -2,6 +2,25 @@
 shopt -s expand_aliases
 ############################################################
 # This one recieves a list of file ids from the repository #
+while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
+do
+	if [[ "${1}" = "-t" ]]
+	then
+		shift
+		target="${1}"
+		shift
+		if [[ ! -d "${target}" ]]
+		then
+			mkdir -p "${target}"
+		fi
+		cd "${target}" || exit $?
+		continue
+	fi
+	errcho "I dont understand parameter ${1}"
+	shift
+	continue
+done
+
 while read id
 do
 	gen_loc
