@@ -66,8 +66,8 @@ do
 					then
 						echo "${name}"
 						exit
-					else
-						errcho "${tloc} vs ${loc}/data"
+					#else
+					#	errcho "${tloc} vs ${loc}/data"
 					fi 	
 				fi
 			done
