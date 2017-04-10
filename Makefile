@@ -8,7 +8,7 @@ EXTDIR=share/idx
 
 # variables used by make 
 TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/$(EXTDIR)/,$(wildcard idx-*)) $(addprefix $(DESTDIR)$(PREFIX)/bin/,idx)
-DEPS=sha256sum date file bash
+DEPS=sha256sum date file bash pdftotext
 
 all:
 	@echo usage:
