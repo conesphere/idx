@@ -1,0 +1,19 @@
+#!/bin/bash
+shopt -s expand_aliases
+##########################################################
+# Performs some sort of full text search.                #
+# it passes all its options to grep -q ... textdata      # 
+# if grep does not match, the data is filtered           #
+##########################################################
+while read id
+do
+	gen_loc
+	test_loc
+	if [[ ! -a ${loc}/text ]]
+	then 
+		errcho "there no text file for ${id} skipping"
+		continue
+	fi
+	grep -q "${@}" ${loc}/text && echo ${id}
+done
+
