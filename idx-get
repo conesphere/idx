@@ -20,7 +20,7 @@ do
 	then 
 		name=${id}
 	else
-		read name < ${loc}/${name}
+		read name < ${loc}/name
 	fi
 	if [[ -e ${name} ]]
 	then

@@ -1,10 +1,10 @@
 #!/bin/bash
 shopt -s expand_aliases
-PREFIX=${0%/bin/*}
+#PREFIX=${0%/bin/*}
 # Make sure there is exact one share/idx path in the front
-pathadd="${HOME}/.idx-extensions:/etc/idx-extensions:${PREFIX}/share/idx"
-PATH="${pathadd}:${PATH#${pathadd}:}"
-unset pathadd
+EXTDIR="${HOME}/.idx-extensions /etc/idx-extensions ${PREFIX}/share/idx"
+#PATH="${pathadd}:${PATH#${pathadd}:}"
+#unset pathadd
 alias errcho='>&2 echo "${0}:"'
 export IDX_DIR PATH PREFIX
 IDX_DIR=${IDX_DIR:=~/.idx_data}
@@ -41,7 +41,13 @@ then
 	exit 1
 fi
 shift
-idx-${CMD} "${@}"
-
+for dir in ${EXTDIR}
+do
+	if [[ -f ${dir}/idx-${CMD} ]]
+	then
+		. ${dir}/idx-${CMD} "${@}"
+		break
+	fi
+done
 # ensure that git annex stuff is ready and committed if needed
 
