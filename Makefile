@@ -13,7 +13,7 @@ DEPS=sha256sum date file bash pdftotext grep
 all:
 	@echo usage:
 	@echo make install
-	@echo make PREFIX=~ EXTDIR=.idx-extensions install
+	@echo make PREFIX=~ EXTDIR=.idx/extensions install
 	@echo make DESTDIR=/tmp/urpackagebase install
 	@echo make uninstall
 	@echo make clean
