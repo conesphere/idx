@@ -1,21 +1,19 @@
 #!/bin/bash
-shopt -s expand_aliases
 ##############################################
 # This one adds a pdf file to the repository #
 while read file
 do
-	if [[ ! -f ${file} ]]
+	if [[ ! -f "${file}" ]]
 	then
 		errcho "File ${file} does not exist skipping"
 		continue
 	fi
-	if [[ -L ${file} ]]
+	if [[ -L "${file}" ]]
 	then
 		link=$(readlink "${file}")
-		if [[ ${link} = */data ]]
+		if [[ "${link}" = ${IDX_BLOB}/*/???????????????????????????????????????????????????????????????? ]]
 		then
-			id=${link%/data}
-			id=${id##*/}
+			id="${link##*/}"
 		else
 			errcho "File ${file} is a symlink but not pointing to idx store, skipping"
 			continue
@@ -23,46 +21,54 @@ do
 	else
 		# regular file, not indexed yet 
 		id=$(sha256sum -b ${file})
-		id=${id% *}
+		id="${id% *}"
 	fi
 	
-	gen_loc
+	loc="${IDX_DIR}"/$(idxpand ${id})
+	blob="${IDX_BLOB}"/$(idxpand ${id})
 
-	if [[ -d ${loc} ]]
+	if [[ -a "${blob}" ]]
 	then
-		if [[ -a ${loc}/data ]]
+		errcho "File ${file} is already indexed updating record"
+		if [[ -a "${file}" ]]
 		then
-			errcho "File ${file} is already indexed updating record"
-			rm -f ${file}
-		else
-			errcho "File ${file} is already indexed but data missing, readd data"
-			mv ${file} ${loc}/data
+			rm -f "${file}"
+		fi
+		if [[ ! -d "${loc}" ]]
+		then
+			errcho "File ${file} is already indexed but index missing, creating new ${loc}"
+			mkdir -p "${loc}"
 		fi
 	else
-		mkdir -p ${loc}
-		mv ${file} ${loc}/data
-		chmod 444 ${loc}/data
+		if [[ -d "${loc}" ]]
+		then
+			errcho "File ${file} is already indexed but data missing, readd data"
+		fi
+		mkdir -p "${loc}"
+		mkdir -p "${blob%/*}"
+		mv "${file}" "${blob}"
+		chmod 444 "${blob}"
 	fi
-	ln -s ${loc}/data ${file}
+	ln -s "${blob}" "${file}"
 	# do basename just in case
-	file=${file##*/}
+	file="${file##*/}"
 	# save name
-	echo ${id} | idx set name "${file}" > /dev/null
-	if [[ ! -f ${loc}/datetime ]]
+	echo "${id}" | idx set name "${file}" > /dev/null
+	if [[ ! -f "${loc}/datetime" ]]
 	then
 		date=$(date '+%Y-%m-%d %H:%M:%S')
-		echo "${date}" > ${loc}/datetime
-		echo "${date:0:4}" > ${loc}/year
-		echo "${date:5:2}" > ${loc}/month
-		echo "${date:8:2}" > ${loc}/day
-		echo "${date:11:2}" > ${loc}/hour
-		echo "${date:14:2}" > ${loc}/minute
-		echo "${date:17:2}" > ${loc}/second
+		echo "${date}" > "${loc}/datetime"
+		echo "${date:0:4}" > "${loc}/year"
+		echo "${date:5:2}" > "${loc}/month"
+		echo "${date:8:2}" > "${loc}/day"
+		echo "${date:11:2}" > "${loc}/hour"
+		echo "${date:14:2}" > "${loc}/minute"
+		echo "${date:17:2}" > "${loc}/second"
 	fi
-	if [[ ! -f ${loc}/mimetype ]]
+	if [[ ! -f "${loc}/mimetype" ]]
 	then
-		file -L -b --mime-type ${loc}/data > ${loc}/mimetype
+		file -L -b --mime-type "${blob}" > "${loc}/mimetype"
 	fi
-	echo ${id}
+	echo "${id}"
 done
 

@@ -1,5 +1,4 @@
 #!/bin/bash
-shopt -s expand_aliases
 ########################################################
 # This one sets an info to a file like a tag or a name #
 filter_regex="true"
@@ -12,8 +11,11 @@ name=${1}
 shift
 while read id
 do
-	gen_loc
-	test_loc
+	loc="${IDX_DIR}"/$(idxpand ${id})
+	blob="${IDX_BLOB}"/$(idxpand ${id})
+	
+	idxchkloc "${loc}" || continue
+
 	if [[ ! -f ${loc}/${name} ]]
 	then 
 		# we dont have to check if there are no tags 
@@ -32,7 +34,7 @@ do
 					do
 						if [[ "${s}" = ${p} ]]
 						then
-							echo ${id}
+							echo "${id}"
 							exit 
 						fi
 					done
@@ -49,12 +51,12 @@ do
 				do 
 					if [[ -n "${temp[${s}]}" ]]
 					then
-						echo ${id}
+						echo "${id}"
 						exit 
 					fi
 				done
 			fi
-		) < ${loc}/${name} 
+		) < "${loc}/${name}" 
 	fi
 done
 

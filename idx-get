@@ -1,5 +1,4 @@
 #!/bin/bash
-shopt -s expand_aliases
 ############################################################
 # This one recieves a list of file ids from the repository #
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
@@ -23,35 +22,34 @@ done
 
 while read id
 do
-	gen_loc
-	test_loc
-	if [[ ! -a ${loc}/data ]]
-	then
-		errcho "Data of ${id} does not exist in index, skipping"
-		continue
-	fi
+	loc="${IDX_DIR}"/$(idxpand ${id})
+	blob="${IDX_BLOB}"/$(idxpand ${id})
+	
+	idxchkloc "${loc}" || continue
+	idxchkblob "${blob}" ", skipping" || continue
+
 	# now lets find a useable filename and go ahead...
-	if [[ ! -f ${loc}/name ]] 
+	if [[ ! -f "${loc}/name" ]] 
 	then 
-		name=${id}
+		name="${id}"
 		# we guess here that it is unlikely that a symlink known exactly as the id is in the 
 		# directory pointing to something else than the idxed data blob 
-		while [[ -e ${name} ]]
+		while [[ -e "${name}" ]]
 		do
-			if [[ -L ${name} ]]
+			if [[ -L "${name}" ]]
 			then
 				tloc=$(readlink "${name}")
-				if [[ "${tloc}" = "${loc}/data" ]]
+				if [[ "${tloc}" = "${blob}" ]]
 				then
 					# nothing left to do, skip it
 					break
 				fi 	
 			fi
 			cnt=$((${cnt}+1))
-			name=${name%-*}-${cnt}
+			name="${cnt}-${name#*-}"
 		done
 	else
-		name=$(cat ${loc}/name | (
+		name=$(cat "${loc}/name" | (
 			while read name
 			do
 				if [[ ! -e "${name}" ]]
@@ -72,22 +70,22 @@ do
 				fi
 			done
 			# if I am here that means we did not found a name useable
-			read name < ${loc}/name
-			while [[ -e ${name} ]]
+			read name < "${loc}/name"
+			while [[ -e "${name}" ]]
 			do
-				if [[ -L ${name} ]]
+				if [[ -L "${name}" ]]
 				then
 					tloc=$(readlink "${name}")
-					if [[ "${tloc}" = "${loc}/data" ]]
+					if [[ "${tloc}" = "${blob}" ]]
 					then
-						echo ${name}
+						echo "${name}"
 						exit
 					fi 	
 				fi
 				cnt=$((${cnt}+1))
-				name=${cnt}-${name#*-}
+				name="${cnt}-${name#*-}"
 			done
-			echo ${name}
+			echo "${name}"
 			exit
 		))
 	fi
@@ -101,8 +99,8 @@ do
 		errcho "Name ${name} ${id} is already checked out, continue"
 		# nothing left to do, skip it
 	else
-		ln -s ${loc}/data ${name}
+		ln -s "${blob}" "${name}"
 	fi
-	echo ${name}
+	echo "${name}"
 done
 

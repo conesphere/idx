@@ -1,21 +1,19 @@
 #!/bin/bash
-shopt -s expand_aliases
 #################################################
 # picks an idx id out of a checked out filename #
 while read file
 do
-	if [[ ! -f ${file} ]]
+	if [[ ! -f "${file}" ]]
 	then
 		errcho "File ${file} does not exist skipping"
 		continue
 	fi
-	if [[ -L ${file} ]]
+	if [[ -L "${file}" ]]
 	then
 		link=$(readlink "${file}")
-		if [[ ${link} = */data ]]
+		if [[ "${link}" = ${IDX_BLOB}/*/???????????????????????????????????????????????????????????????? ]]
 		then
-			id=${link%/data}
-			id=${id##*/}
+			id="${link##*/}"
 		else
 			errcho "File ${file} is a symlink but not pointing to idx store, skipping"
 			continue
@@ -26,6 +24,6 @@ do
 		continue
 	fi
 	
-	echo ${id}
+	echo "${id}"
 done
 

@@ -1,20 +1,20 @@
 #!/bin/bash
-shopt -s expand_aliases
 ########################################################
 # This one sets an info to a file like a tag or a name #
-name=${1}
+name="${1}"
 shift
 while read id
 do
-	gen_loc
-	test_loc
+	loc="${IDX_DIR}"/$(idxpand ${id})
+	
+	idxchkloc "${loc}" || continue
 
-	if [[ ! -f ${loc}/${name} ]]
+	if [[ ! -f "${loc}/${name}" ]]
 	then 
 		# we dont have to check if there are no tags yet 
-		for value in $@
+		for value in "$@"
 		do
-			echo ${value} >> ${loc}/${name}
+			echo "${value}" >> "${loc}/${name}"
 		done
 	else
 		( 
@@ -40,11 +40,11 @@ do
 			(
 				for value in "${output[@]}" 
 				do
-					echo ${value}
+					echo "${value}"
 				done
-			) > ${loc}/${name}
-		) < ${loc}/${name} 
+			) > "${loc}/${name}"
+		) < "${loc}/${name}" 
 	fi
-	echo ${id}
+	echo "${id}"
 done
 

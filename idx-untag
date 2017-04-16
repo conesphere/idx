@@ -1,4 +1,4 @@
 #!/bin/bash
 ##############################################
 # This one adds a pdf file to the repository #
-idx unset tag $@
+idx unset tag "${@}"

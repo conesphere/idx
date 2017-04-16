@@ -1,24 +1,22 @@
 #!/bin/bash
-shopt -s expand_aliases
 ########################ä#################################
 # This creates a text file right next to a data file for #
 # full text pdf search                                   #
 ##########################################################
 while read id
 do
-	gen_loc
-	test_loc
-	if [[ ! -a ${loc}/data ]]
-	then 
-		errcho "there is no data file for ${id} skipping"
-		continue
-	fi
-	read mimetype < ${loc}/mimetype
-	mimetype=${mimetype:="pdf"}
+	loc="${IDX_DIR}"/$(idxpand ${id})
+	blob="${IDX_BLOB}"/$(idxpand ${id})
+	
+	idxchkloc "${loc}" || continue
+	idxchkblob "${blob}" ", skipping" || continue
+
+	read mimetype < "${loc}/mimetype"
+	mimetype="${mimetype:="pdf"}"
 	if [[ "${mimetype}" = *pdf* ]]
 	then 
-		pdftotext ${loc}/data ${loc}/text
-		echo ${id}
+		pdftotext "${blob}" "${loc}/text"
+		echo "${id}"
 		continue
 	fi
 	errcho "unknown mimetype ${mimetype} for id ${id} skipping"

@@ -7,6 +7,7 @@ EXTDIR="${HOME}/.idx/extensions /etc/idx/extensions ${PREFIX}/share/idx"
 errcho() { >&2 echo "${0}:" "${@}"; }
 export IDX_DIR PATH PREFIX
 IDX_DIR=${IDX_DIR:=~/.idx/data}
+IDX_BLOB=${IDX_BLOB:=~/.idx/blob}
 
 # parsing command line args 
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
@@ -23,20 +24,34 @@ do
 	continue
 done
 
-# at some places we need aliasing 
-alias gen_loc='loc=${IDX_DIR}/${id:0:6}/${id:6:6}/${id:12:6}/${id:18:6}/${id}'
-alias test_loc='if [[ ! -d ${loc} ]]
-then
-      errcho "ID ${id} is not indexed, skipping!"
-      continue
-fi
-'
-alias test_data='if [[ ! -a ${loc}/data ]]
-then
-      errcho "ID ${id} has no data, skipping!"
-      continue
-fi
-'
+# this function expands an IDX Path and returns that to stdout
+# call $(idxpand "${id}") to utilize this 
+idxpand() {
+	echo "${1:0:6}/${1:6:6}/${1:12:6}/${1:18:6}/${1}"
+}
+
+# this one checks  if the data location ist there
+# if the location is not there it usually skips the entry 
+# usage: idxchkloc ${locpath} || continue
+idxchkloc() {
+	if [[ ! -d "${1}" ]]
+	then
+      errcho "ID ${1##*/} is not indexed, skipping!"
+		return 1
+	fi
+	return 0
+}
+
+# this one checks  if the data blob ist there
+# usage: idxchkblob ${blobpath} || continue
+idxchkblob() {
+	if [[ ! -a "${1}" ]]
+	then
+      errcho "ID ${1##*/} has no data ${2}"
+      return 1
+	fi
+	return 0
+}
 
 # because we dont have any switches left
 # we can push forward the command
