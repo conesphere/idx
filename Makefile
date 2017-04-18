@@ -4,7 +4,7 @@
 # variables to be set externally
 DESTDIR= 
 PREFIX=/usr/local
-EXTDIR=share/idx
+EXTDIR=share/idx/extensions
 
 # variables used by make 
 TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/$(EXTDIR)/,$(wildcard idx-*)) $(addprefix $(DESTDIR)$(PREFIX)/bin/,idx)
