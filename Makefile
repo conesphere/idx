@@ -8,7 +8,7 @@ EXTDIR=share/idx
 
 # variables used by make 
 TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/$(EXTDIR)/,$(wildcard idx-*)) $(addprefix $(DESTDIR)$(PREFIX)/bin/,idx)
-DEPS=sha256sum date file bash pdftotext grep
+DEPS=sha256sum date file bash pdftotext grep shellcheck
 
 all:
 	@echo usage:
@@ -46,11 +46,13 @@ $(DESTDIR)$(PREFIX)/$(EXTDIR):
 	install -d $@
 	
 $(DESTDIR)$(PREFIX)/$(EXTDIR)/idx-%: idx-% $(DESTDIR)$(PREFIX)/$(EXTDIR)
+	shellcheck $<
 	install $< $@
 
 $(DESTDIR)$(PREFIX)/bin:
 	install -d $@
 
 $(DESTDIR)$(PREFIX)/bin/idx: idx $(DESTDIR)$(PREFIX)/bin
+	shellcheck -x $<
 	install $< $@
 
