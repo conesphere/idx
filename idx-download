@@ -1,0 +1,33 @@
+#!/bin/bash
+############################################################
+# This downloads a blob that is not there yet              #
+idx_download() {
+	id="${1}"
+	shift
+	blob="${1}"
+	shift
+	
+	
+}
+
+while read -r id
+do
+	blob="${IDX_BLOB}"/$(idxpand "${id}")
+	rmtpath=$(idxpand "${id}")
+
+	# ensure that the local blob directory is here
+	if [[ ! -d "${blob%/*}" ]]
+	then
+		mkdir -p "${blob%/*}" || continue
+	fi
+	
+	if [[ ! -a "${blob}" ]]
+	then
+		scp "${IDX_REMOTE}/${rmtpath}" "${blob}" || continue
+	fi
+
+	idxchkblob "${blob}" ", continue with next one" || continue
+
+	echo "${id}"
+done
+
