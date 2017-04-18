@@ -2,6 +2,10 @@
 ################################################
 # perform git on idx data dir (not streamable) #
 
+if [[ ! -d "${IDX_DIR}" ]]
+then
+	mkdir -p "${IDX_DIR}"
+fi
 cd "${IDX_DIR}" || exit $?
 git "${@}"
 

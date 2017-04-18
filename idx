@@ -5,7 +5,7 @@ EXTDIR="${HOME}/.idx/extensions /etc/idx/extensions ${PREFIX}/share/idx/extensio
 CFGPATH="${PREFIX}/share/idx/config /etc/idx/config ${HOME}/.idx/config"
 # we want a command to log to stderr 
 errcho() { >&2 echo "${0}:" "${@}"; }
-export IDX_DIR IDX_BLOB IDX_REMOTES PATH PREFIX
+export IDX_DIR IDX_BLOB IDX_REMOTE PATH PREFIX
 
 # load all config variables to index environment 
 for dir in ${CFGPATH}
