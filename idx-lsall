@@ -1,2 +1,3 @@
 #!/bin/bash
-ls -d "${IDX_DIR}"/*/*/*/*/* | ( while read dir; do echo "${dir##*/}" ; done ) 
+# shellcheck disable=SC2012
+ls -d "${IDX_DIR}"/*/*/*/*/* | ( while read -r dir; do echo "${dir##*/}" ; done ) 

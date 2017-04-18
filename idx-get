@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2094
 ############################################################
 # This one recieves a list of file ids from the repository #
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
@@ -20,10 +21,10 @@ do
 	continue
 done
 
-while read id
+while read -r id
 do
-	loc="${IDX_DIR}"/$(idxpand ${id})
-	blob="${IDX_BLOB}"/$(idxpand ${id})
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	blob="${IDX_BLOB}"/$(idxpand "${id}")
 	
 	idxchkloc "${loc}" || continue
 	idxchkblob "${blob}" ", skipping" || continue
@@ -45,12 +46,12 @@ do
 					break
 				fi 	
 			fi
-			cnt=$((${cnt}+1))
+			cnt=$((cnt+1))
 			name="${cnt}-${name#*-}"
 		done
 	else
-		name=$(cat "${loc}/name" | (
-			while read name
+		name=$(
+			(while read -r name
 			do
 				if [[ ! -e "${name}" ]]
 				then
@@ -70,7 +71,7 @@ do
 				fi
 			done
 			# if I am here that means we did not found a name useable
-			read name < "${loc}/name"
+			read -r name < "${loc}/name"
 			while [[ -e "${name}" ]]
 			do
 				if [[ -L "${name}" ]]
@@ -82,12 +83,12 @@ do
 						exit
 					fi 	
 				fi
-				cnt=$((${cnt}+1))
+				cnt=$((cnt+1))
 				name="${cnt}-${name#*-}"
 			done
 			echo "${name}"
 			exit
-		))
+		) < "${loc}/name" )
 	fi
 	if [[ -z "${name}" ]]
 	then

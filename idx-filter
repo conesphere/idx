@@ -9,10 +9,9 @@ then
 fi
 name=${1}
 shift
-while read id
+while read -r id
 do
-	loc="${IDX_DIR}"/$(idxpand ${id})
-	blob="${IDX_BLOB}"/$(idxpand ${id})
+	loc="${IDX_DIR}"/$(idxpand "${id}")
 	
 	idxchkloc "${loc}" || continue
 
@@ -28,10 +27,11 @@ do
 			then 
 				# we have to compare bit by bit 
 				# if we do filtering 
-				while read s
+				while read -r s
 				do 
 					for p in "${@}"
 					do
+						# shellcheck disable=SC2053
 						if [[ "${s}" = ${p} ]]
 						then
 							echo "${id}"
@@ -44,10 +44,10 @@ do
 				# filter_regex implementation 
 				for s in "${@}"
 				do
-					((temp[${s}]++))
+					((temp["${s}"]++))
 				done
 				
-				while read s
+				while read -r s
 				do 
 					if [[ -n "${temp[${s}]}" ]]
 					then

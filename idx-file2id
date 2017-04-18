@@ -1,7 +1,7 @@
 #!/bin/bash
 #################################################
 # picks an idx id out of a checked out filename #
-while read file
+while read -r file
 do
 	if [[ ! -f "${file}" ]]
 	then

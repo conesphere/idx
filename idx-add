@@ -1,7 +1,7 @@
 #!/bin/bash
 ##############################################
 # This one adds a pdf file to the repository #
-while read file
+while read -r file
 do
 	if [[ ! -f "${file}" ]]
 	then
@@ -20,12 +20,12 @@ do
 		fi
 	else
 		# regular file, not indexed yet 
-		id=$(sha256sum -b ${file})
+		id=$(sha256sum -b "${file}")
 		id="${id% *}"
 	fi
 	
-	loc="${IDX_DIR}"/$(idxpand ${id})
-	blob="${IDX_BLOB}"/$(idxpand ${id})
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	blob="${IDX_BLOB}"/$(idxpand "${id}")
 
 	if [[ -a "${blob}" ]]
 	then

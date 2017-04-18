@@ -3,15 +3,15 @@
 # This creates a text file right next to a data file for #
 # full text pdf search                                   #
 ##########################################################
-while read id
+while read -r id
 do
-	loc="${IDX_DIR}"/$(idxpand ${id})
-	blob="${IDX_BLOB}"/$(idxpand ${id})
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	blob="${IDX_BLOB}"/$(idxpand "${id}")
 	
 	idxchkloc "${loc}" || continue
 	idxchkblob "${blob}" ", skipping" || continue
 
-	read mimetype < "${loc}/mimetype"
+	read -r mimetype < "${loc}/mimetype"
 	mimetype="${mimetype:="pdf"}"
 	if [[ "${mimetype}" = *pdf* ]]
 	then 

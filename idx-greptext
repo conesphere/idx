@@ -4,9 +4,9 @@
 # it passes all its options to grep -q ... textdata      # 
 # if grep does not match, the data is filtered           #
 ##########################################################
-while read id
+while read -r id
 do
-	loc="${IDX_DIR}"/$(idxpand ${id})
+	loc="${IDX_DIR}"/$(idxpand "${id}")
 	idxchkloc "${loc}" || continue
 
 	if [[ ! -a ${loc}/text ]]

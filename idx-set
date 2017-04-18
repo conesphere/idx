@@ -1,11 +1,12 @@
 #!/bin/bash
+# shellcheck disable=SC2094
 ########################################################
 # This one sets an info to a file like a tag or a name #
 name="${1}"
 shift
-while read id
+while read -r id
 do
-	loc="${IDX_DIR}"/$(idxpand ${id})
+	loc="${IDX_DIR}"/$(idxpand "${id}")
 	
 	idxchkloc "${loc}" || continue
 
@@ -22,14 +23,14 @@ do
 			
 			output=()
 
-			while read s
+			while read -r s
 			do 
 				output=("${output[@]}" "${s}")
-				((temp[${s}]++))
+				((temp["${s}"]++))
 			done
 			for s in "${@}"
 			do
-				if [[ -n ${temp[${s}]} ]]
+				if [[ -n ${temp["${s}"]} ]]
 				then
 					continue
 				else
