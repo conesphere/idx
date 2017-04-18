@@ -2,11 +2,24 @@
 #PREFIX=${0%/bin/*}
 # Make sure there is exact one share/idx path in the front
 EXTDIR="${HOME}/.idx/extensions /etc/idx/extensions ${PREFIX}/share/idx/extensions"
+CFGPATH="${PREFIX}/share/idx/config /etc/idx/config ${HOME}/.idx/config"
 # we want a command to log to stderr 
 errcho() { >&2 echo "${0}:" "${@}"; }
-export IDX_DIR PATH PREFIX
-IDX_DIR=${IDX_DIR:=~/.idx/data}
-IDX_BLOB=${IDX_BLOB:=~/.idx/blob}
+export IDX_DIR IDX_BLOB IDX_REMOTES PATH PREFIX
+
+# load all config variables to index environment 
+for dir in ${CFGPATH}
+do
+	if [[ -a ${dir} ]]
+	then
+		# shellcheck source=./idx-add
+		. "${dir}"
+	fi
+done
+
+# defaulting config variables 
+IDX_DIR="${IDX_DIR:=~/.idx/data}"
+IDX_BLOB="${IDX_BLOB:=~/.idx/blob}"
 
 # parsing command line args 
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
