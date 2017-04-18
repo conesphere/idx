@@ -1,5 +1,4 @@
 #!/bin/bash
-shopt -s expand_aliases
 #PREFIX=${0%/bin/*}
 # Make sure there is exact one share/idx path in the front
 EXTDIR="${HOME}/.idx/extensions /etc/idx/extensions ${PREFIX}/share/idx"
