@@ -1,0 +1,21 @@
+#!/bin/bash
+############################################################
+# This downloads a blob that is not there yet              #
+if [[ ! -d "${IDX_BLOB}" ]]
+then
+	mkdir -p "${IDX_BLOB}"
+fi
+cd ${IDX_BLOB} || exit 1
+(
+	while read -r id
+	do
+		idpath=$(idxpand "${id}")
+		blob="${IDX_BLOB}/${idpath}"
+
+		#idxchkblob "${blob}" ", continue with next one" || continue
+	
+		echo "${idpath}"
+	done
+) | rsync -c -e ssh -d --files-from=- "${@}" 
+
+

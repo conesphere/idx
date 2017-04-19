@@ -18,8 +18,8 @@ do
 done
 
 # defaulting config variables 
-IDX_DIR="${IDX_DIR:=~/.idx/data}"
-IDX_BLOB="${IDX_BLOB:=~/.idx/blob}"
+IDX_DIR=${IDX_DIR:=~/.idx/data}
+IDX_BLOB=${IDX_BLOB:=~/.idx/blob}
 
 # parsing command line args 
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]

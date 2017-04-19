@@ -65,4 +65,3 @@ and /usr/local/share/idx a new feature just means placing a script in the right
 place. These scripts earn some features from the main script like finding the
 right storage location, as well as logging tools. 
 
-
