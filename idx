@@ -74,14 +74,21 @@ then
 	exit 1
 fi
 shift
+CMD_FOUND="false"
 for dir in ${EXTDIR}
 do
 	if [[ -f ${dir}/idx-${CMD} ]]
 	then
+		CMD_FOUND="true"
 		# shellcheck source=./idx-add
 		. "${dir}"/idx-"${CMD}" "${@}"
 		break
 	fi
 done
+if [[ "${CMD_FOUND}" = "false" ]]
+then
+	errcho "We where not able to locate command script idx-${CMD}"
+	exit 1
+fi
 # ensure that git annex stuff is ready and committed if needed
 
