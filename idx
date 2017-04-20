@@ -1,5 +1,5 @@
 #!/bin/bash
-#PREFIX=${0%/bin/*}
+PREFIX="${0%/bin/*}"
 # Make sure there is exact one share/idx path in the front
 EXTDIR="${HOME}/.idx/extensions /etc/idx/extensions ${PREFIX}/share/idx/extensions"
 CFGPATH="${PREFIX}/share/idx/config /etc/idx/config ${HOME}/.idx/config"
