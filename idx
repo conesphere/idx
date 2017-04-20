@@ -87,7 +87,7 @@ do
 done
 if [[ "${CMD_FOUND}" = "false" ]]
 then
-	errcho "We where not able to locate command script idx-${CMD}"
+	errcho "We where not able to locate command script idx-${CMD} in path ${EXTDIR}"
 	exit 1
 fi
 # ensure that git annex stuff is ready and committed if needed
