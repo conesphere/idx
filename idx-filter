@@ -1,7 +1,7 @@
 #!/bin/bash
 ########################################################
 # This one sets an info to a file like a tag or a name #
-filter_regex="true"
+filter_regex="false"
 if [[ ${1} == "-e" ]]
 then
 	filter_regex="true"
@@ -41,7 +41,7 @@ do
 				done
 
 			else
-				# filter_regex implementation 
+				# filter non regex implementation 
 				for s in "${@}"
 				do
 					((temp["${s}"]++))
