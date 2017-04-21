@@ -1,0 +1,36 @@
+#!/bin/bash
+########################################################
+# This one sets an info to a file like a tag or a name #
+name=${1}
+shift
+while read -r id
+do
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	
+	idxchkloc "${loc}" || continue
+
+	if [[ -n ${name} ]]
+	then
+		if [[ ! -f "${loc}/${name}" ]]
+		then 
+			# we dont have to check if there are no tags 
+			errcho "No Info Available for ${id} ${name}"
+			continue
+		fi
+		(
+			while read -r info
+			do
+				echo "${info} ${name} ${id}"
+			done
+		) < "${loc}/${name}"
+	else
+		cd "${loc}"
+		ls | ( 
+			while read -r entry
+			do
+				echo "${entry} ${id}"
+			done
+		)
+	fi
+done
+
