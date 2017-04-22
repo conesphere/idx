@@ -7,6 +7,8 @@ while read -r id
 do
 	loc="${IDX_DIR}"/$(idxpand "${id}")
 	
+	shortid="${id:0:4}...${id:60:4}"
+	
 	idxchkloc "${loc}" || continue
 
 	if [[ -n ${name} ]]
@@ -20,7 +22,7 @@ do
 		(
 			while read -r info
 			do
-				echo "${info} ${name} ${id}"
+				echo "${shortid}	${name}	${info}"
 			done
 		) < "${loc}/${name}"
 	else
@@ -29,7 +31,7 @@ do
 		ls | ( 
 			while read -r entry
 			do
-				echo "${entry} ${id}"
+				echo "${shortid}	${entry}"
 			done
 		)
 	fi
