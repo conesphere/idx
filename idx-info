@@ -24,7 +24,8 @@ do
 			done
 		) < "${loc}/${name}"
 	else
-		cd "${loc}"
+		cd "${loc}" || continue
+		# shellcheck disable=SC2012
 		ls | ( 
 			while read -r entry
 			do
