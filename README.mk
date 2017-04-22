@@ -41,22 +41,30 @@ to get all files tagged unread with the text Invoice in it:
 
 - idx add
 - idx lsall
-- idx filter
-- idx get
-- idx set
-- idx tag
-- idx unset
-- idx untag
+- idx filter [-e] [type] [values] [...]
+- idx get [-t target]
+- idx set [type] [values] [...]
+- idx tag [values] [...]
+- idx unset [type] [values] [...]
+- idx untag [values] [...]
 - idx file2id
 - idx savetext
 - idx greptext
+- idx info [type]
+- idx rsync [source|.] [target|.]
+- idx git [...]
 
-#Storage
+# Storage
 
-Data files are stored in $HOME/.idx-data if nothing else is known. 
+IDX uses the sha256sum of the stored blob object as a reference. 
+Blobs  mostly PDF files are stored in $HOME/.idx/blob while the 
+smaller indexing informations like tags and plaintext are stored 
+in $HOME/.idx/data. The Index files can be version controled with GIT, 
+while the static blob files can be synced with "rsync -e ssh" between 
+two systems nodes. 
 
 
-#Extensions
+# Extensions
 
 You can easily write your own workflows using shellscripts. 
 
