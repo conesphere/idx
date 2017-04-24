@@ -1,0 +1,21 @@
+#!/bin/bash
+###################################
+# retrieves a filename from an ID #
+# retrieved filenames are not absolute, because they might be double # 
+while read -r id
+do
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	idxchkloc "${loc}" || continue
+	if [[ ! -f "${loc}/name" ]] 
+	then 
+		name="${id}"
+	else
+		read -r name < "${loc}/name"
+	fi
+	if [[ -z "${name}" ]]
+	then
+		name="${id}"
+	fi
+	echo "${name}"
+done
+

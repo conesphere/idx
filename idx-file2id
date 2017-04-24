@@ -5,7 +5,7 @@ while read -r file
 do
 	if [[ ! -f "${file}" ]]
 	then
-		errcho "File ${file} does not exist skipping"
+		errcho "File ${file} does not exist, or is directory skipping"
 		continue
 	fi
 	if [[ -L "${file}" ]]
