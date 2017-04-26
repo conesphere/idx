@@ -42,17 +42,13 @@ uninstall:  $(TARGETS)
 	rm -f install
 	@echo done
 
-$(DESTDIR)$(PREFIX)/$(EXTDIR):
-	install -d $@
-	
-$(DESTDIR)$(PREFIX)/$(EXTDIR)/idx-%: idx-% $(DESTDIR)$(PREFIX)/$(EXTDIR)
+$(DESTDIR)$(PREFIX)/$(EXTDIR)/idx-%: idx-% 
+	install -d $(DESTDIR)$(PREFIX)/$(EXTDIR)
 	shellcheck $<
 	install $< $@
 
-$(DESTDIR)$(PREFIX)/bin:
-	install -d $@
-
 $(DESTDIR)$(PREFIX)/bin/idx: idx $(DESTDIR)$(PREFIX)/bin
+	install -d $(DESTDIR)$(PREFIX)/bin
 	shellcheck -x $<
 	install $< $@
 
