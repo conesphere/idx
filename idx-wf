@@ -7,7 +7,7 @@
 unset_tag() {
 	id="${1}"
 	shift
-	read -p "tags > " -r tags
+	read -e -p "tags > " -r tags
 	# shellcheck disable=SC2086
 	echo "${id}" | idx untag ${tags}
 	show_info_detail "${id}" tag
@@ -16,7 +16,7 @@ unset_tag() {
 set_tag() {
 	id="${1}"
 	shift
-	read -p "tags > " -r tags
+	read -e -p "tags > " -r tags
 	# shellcheck disable=SC2086
 	echo "${id}" | idx tag ${tags}
 	show_info_detail "${id}" tag
