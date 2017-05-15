@@ -4,6 +4,26 @@
 # This one recieves a list of file ids from the repository #
 while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
 do
+	if [[ "${1}" = "-T" ]]
+	then
+		shift
+		while true
+		do
+			# shellcheck disable=SC2027
+			target="${HOME}/idx-work/"$(date '+%Y-%m-%d_%H:%M:%S:%N')"_$$"
+			if [[ ! -d "${target}" ]]
+			then
+				mkdir -p "${target}"
+				break
+			else
+				sleep 0.01
+			fi
+		done
+		cd "${target}" || exit $?
+		echo "${target}"
+		declare -x silence="true"
+		continue
+	fi
 	if [[ "${1}" = "-t" ]]
 	then
 		shift
@@ -101,6 +121,10 @@ do
 		# nothing left to do, skip it
 	else
 		ln -s "${blob}" "${name}"
+	fi
+	if [[ "${silence}" = "true" ]]
+	then
+		continue
 	fi
 	echo "${name}"
 done
