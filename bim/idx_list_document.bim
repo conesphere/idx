@@ -3,6 +3,14 @@
 
 declare -A idx_doc_list_entry+=(["tst"]=foo)
 declare -a idx_doc_list_topic+=("idx documents")
+declare -A idx_doc_list_reply+=(
+	["f"]="idx_doc_list_filter"
+	["g"]="idx_doc_list_greptext"
+)
+declare -A idx_doc_list_reply_help+=(
+	["f"]="filter the current idx selection by attributes"
+	["g"]="do a full text search on the selection"
+)
 
 idx_doc_list() {
 	cnt=0
@@ -18,12 +26,29 @@ idx_doc_list() {
 			if [[ "${link}" = ${IDX_BLOB}/*/???????????????????????????????????????????????????????????????? ]]
 			then
 				cnt=$((cnt+1))
-				cstr=$(printf "%6i" "${cnt}")
+				cstr=$(printf "%06i" "${cnt}")
 				# we have an indexed document here, this is what we want 
 				declare -x -A idx_doc_list_entry+=(["_${cstr}_ ${file}"]="idx_edit_doc")
 			fi
 		fi
 	done
+	declare -p idx_doc_list_entry
 	bim_show idx_doc_list
+}
+
+idx_doc_list_filter() {
+	OLDPATH="${PWD}"
+	NEWPATH=$(ls * | idx file2id | idx filter "${@}" | idx get -T)
+	cd "${NEWPATH}"
+	idx_doc_list
+	cd "${OLDPATH}"
+}
+
+idx_doc_list_greptext() {
+	OLDPATH="${PWD}"
+	NEWPATH=$(ls * | idx file2id | idx greptext "${@}" | idx get -T)
+	cd "${NEWPATH}"
+	idx_doc_list
+	cd "${OLDPATH}"
 }
 
