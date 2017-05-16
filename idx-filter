@@ -2,11 +2,25 @@
 ########################################################
 # This one sets an info to a file like a tag or a name #
 filter_regex="false"
-if [[ ${1} == "-e" ]]
-then
-	filter_regex="true"
+invert_match="false"
+while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
+do
+	if [[ ${1} == "-v" ]]
+	then
+		invert_match="true"
+		shift
+		continue
+	fi
+	if [[ ${1} == "-e" ]]
+	then
+		filter_regex="true"
+		shift
+		continue
+	fi
+	errcho "I dont understand parameter ${1}"
 	shift
-fi
+	continue
+done
 name=${1}
 shift
 while read -r id
@@ -34,8 +48,11 @@ do
 						# shellcheck disable=SC2053
 						if [[ "${s}" = ${p} ]]
 						then
-							echo "${id}"
-							exit 
+							if [[ "${invert_match}" = "false" ]]
+							then
+								echo "${id}"
+							fi
+							exit
 						fi
 					done
 				done
@@ -51,11 +68,18 @@ do
 				do 
 					if [[ -n "${temp[${s}]}" ]]
 					then
-						echo "${id}"
-						exit 
+						if [[ "${invert_match}" = "false" ]]
+						then
+							echo "${id}"
+						fi 
+						exit
 					fi
 				done
 			fi
+			if [[ "${invert_match}" = "true" ]]
+			then
+				echo "${id}"
+			fi 
 		) < "${loc}/${name}" 
 	fi
 done
