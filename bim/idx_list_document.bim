@@ -32,13 +32,13 @@ idx_doc_list() {
 			fi
 		fi
 	done
-	declare -p idx_doc_list_entry
 	bim_show idx_doc_list
 }
 
 idx_doc_list_filter() {
 	OLDPATH="${PWD}"
-	NEWPATH=$(ls * | idx file2id | idx filter "${@}" | idx get -T)
+	read -p "$ idx filter " -a cmd
+	NEWPATH=$(ls * | idx file2id | idx filter "${cmd[@]}" | idx get -T)
 	cd "${NEWPATH}"
 	idx_doc_list
 	cd "${OLDPATH}"
@@ -46,7 +46,8 @@ idx_doc_list_filter() {
 
 idx_doc_list_greptext() {
 	OLDPATH="${PWD}"
-	NEWPATH=$(ls * | idx file2id | idx greptext "${@}" | idx get -T)
+	read -p "$ idx greptext " -a cmd
+	NEWPATH=$(ls * | idx file2id | idx greptext "${cmd[@]}" | idx get -T)
 	cd "${NEWPATH}"
 	idx_doc_list
 	cd "${OLDPATH}"
