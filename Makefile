@@ -35,11 +35,13 @@ clean:
 
 install: .checkdeps $(TARGETS)
 	@touch install
+	@make -C bim install
 	@echo done
 
 uninstall:  $(TARGETS) 
 	rm -f $^
 	rm -f install
+	@make -C bim uninstall
 	@echo done
 
 $(DESTDIR)$(PREFIX)/$(EXTDIR)/idx-%: idx-% 

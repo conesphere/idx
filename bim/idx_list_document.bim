@@ -1,7 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2154
 
-declare -A idx_doc_list_entry+=(["tst"]=foo)
 declare -a idx_doc_list_topic+=("idx documents")
 declare -A idx_doc_list_reply+=(
 	["f"]="idx_doc_list_filter"

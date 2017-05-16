@@ -1,0 +1,12 @@
+#!/bin/bash
+
+declare -A idx_workflows_entry+=(
+	["_001_ Show Postbox"]="idx_search_postbox"
+)
+
+idx_search_postbox(){
+	CURDIR="${PWD}"
+	NEWDIR=$(idx lsall | idx filter year 2017 | idx filter tag wf::postbox | idx get -T)
+	cd "${NEWDIR}" || return $?
+	idx_doc_list
+}

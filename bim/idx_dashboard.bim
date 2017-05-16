@@ -1,0 +1,15 @@
+#!/bin/bash
+
+declare -A dashboard_entry+=(
+	["IDX Workflows"]="idx_workflows"
+	["IDX Stored Searches"]="idx_stored_searches"
+)
+
+idx_workflows() {
+	bim_show idx_workflows
+}
+
+idx_stored_searches() {
+	bim_show idx_stored_searches
+}
+
