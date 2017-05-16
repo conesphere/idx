@@ -1,0 +1,79 @@
+#!/bin/bash
+# This is an idx standard menu
+
+declare -A idx_edit_doc_entry+=(
+	["_01_ View document"]="idx_view_doc"
+	["_02_ View document information"]="idx_view_doc_info"
+	["_03_ View collection of document information"]="idx_view_doc_info_collection"
+	["_04_ Set tag"]="idx_set_tag"
+	["_05_ Delete tag"]="idx_unset_tag"
+)
+declare -a idx_edit_doc_topic=("IDX edit document")
+
+idx_edit_doc() {
+	declare -x idx_current_doc="${item}"
+	shift
+	declare -x idx_current_doc_id=$(echo "${idx_current_doc}" | idx file2id)
+	idx_edit_doc_topic["1"]="${idx_current_doc}"
+	bim_show idx_edit_doc
+}
+
+
+declare -x idx_view_doc_viewer="atril"
+
+idx_view_doc() {
+	${idx_view_doc_viewer} ${idx_current_doc} &
+}
+
+idx_show_info_detail() {
+	name="${1}"
+	shift
+	echo "${idx_current_doc_id}" | idx info "${name}"
+}
+
+
+declare -a idx_view_doc_info_topic=("IDX view document info")
+idx_view_doc_info() {
+	LSSTR=$(echo "${idx_current_doc_id}" | idx info | (
+		# shellcheck disable=SC2034
+		while read -r shortid info garbage
+		do
+			echo "[\"${info}\"]=\"idx_show_info_detail ${info}\""
+		done
+	))
+	echo ${LSSTR}
+	declare -A idx_view_doc_info_entry=($(echo "${idx_current_doc_id}" | idx info | (
+		# shellcheck disable=SC2034
+		while read -r shortid info garbage
+		do
+			echo "[\"${info}\"]=\"idx_show_info_detail ${info}\""
+		done
+	)))
+	idx_view_doc_info_topic["1"]="${idx_current_doc}"
+	bim_show idx_view_doc_info
+}
+
+idx_view_doc_info_collection() {
+	echo
+	idx_show_info_detail name
+	idx_show_info_detail datetime
+	idx_show_info_detail mimetype
+	idx_show_info_detail tag
+	echo
+}
+
+idx_unset_tag() {
+	read -e -p "tags > " -r tags
+	# shellcheck disable=SC2086
+	echo "${idx_current_doc_id}" | idx untag ${tags}
+	idx_show_info_detail tag
+}
+
+idx_set_tag() {
+	read -e -p "tags > " -r tags
+	# shellcheck disable=SC2086
+	echo "${idx_current_doc_id}" | idx tag ${tags}
+	idx_show_info_detail tag
+}
+
+

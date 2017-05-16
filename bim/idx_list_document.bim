@@ -1,0 +1,29 @@
+#!/bin/bash
+# shellcheck disable=SC2154
+
+declare -A idx_doc_list_entry+=(["tst"]=foo)
+declare -a idx_doc_list_topic+=("idx documents")
+
+idx_doc_list() {
+	cnt=0
+	for file in *
+	do
+		if [[ ! -f "${file}" ]]
+		then
+			continue
+		fi
+		if [[ -L "${file}" ]]
+		then
+			link=$(readlink "${file}")
+			if [[ "${link}" = ${IDX_BLOB}/*/???????????????????????????????????????????????????????????????? ]]
+			then
+				cnt=$((cnt+1))
+				cstr=$(printf "%6i" "${cnt}")
+				# we have an indexed document here, this is what we want 
+				declare -x -A idx_doc_list_entry+=(["_${cstr}_ ${file}"]="idx_edit_doc")
+			fi
+		fi
+	done
+	bim_show idx_doc_list
+}
+

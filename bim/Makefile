@@ -5,9 +5,10 @@
 DESTDIR= 
 PREFIX=/usr/local
 TARGETDIR=share/bim/modules
+MODULENAME=idxmenus
 
 # variables used by make 
-TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/$(TARGETDIR)/idxmenus/,$(wildcard *.bim))
+TARGETS=$(addprefix $(DESTDIR)$(PREFIX)/$(TARGETDIR)/$(MODULENAME)/,$(wildcard *.bim))
 DEPS=idx bash
 
 all:
@@ -42,8 +43,8 @@ uninstall:  $(TARGETS)
 	rm -f install
 	@echo done
 
-$(DESTDIR)$(PREFIX)/$(TARGETDIR)/idxmenus/%.bim: %.bim 
+$(DESTDIR)$(PREFIX)/$(TARGETDIR)/$(MODULENAME)/%.bim: %.bim 
 	install -d $(dir $@)
-	shellcheck $<
+	#shellcheck $<
 	install $< $@
 
