@@ -6,7 +6,42 @@ declare -A idx_workflows_entry+=(
 
 idx_search_postbox(){
 	CURDIR="${PWD}"
-	NEWDIR=$(idx lsall | idx filter year 2017 | idx filter tag wf::postbox | idx get -T)
+	NEWDIR=$(idx lsall | idx filter year 2017 | idx filter tag wf::postbox | idx filter -v tag done done::wf::postbox | idx get -T)
 	cd "${NEWDIR}" || return $?
+	remember_idx_workflow_type=${idx_workflow_type}
+	declare -x idx_workflow_type="wf::postbox"
 	idx_doc_list
+	idx_workflow_type=${remember_idx_workflow_type}
+}
+
+declare -A idx_workflows_entry+=(
+	["_001_ Show Postbox"]="idx_search_postbox"
+)
+
+declare -A idx_edit_doc_entry+=(
+	["_99_ Postbox workflow done"]="idx_workflow_postbox_done"
+)
+declare -A idx_edit_doc_enabled+=(
+	["Postbox workflow done"]="idx_workflow_postbox_enabled"
+)
+
+# this one checks if idx_postbox_workflow is enabled
+idx_workflow_postbox_enabled() {
+	idx info tag <<< "${idx_current_doc_id} | ( 
+		declare -A tags
+		while read -r id tag value
+		do
+			tags["${value}"]="set"
+		done
+		[[ -n "${tags['wf:postbox']}" ]] && 
+		[[ -z "${tags['done::wf::postbox']}" ]] && 
+		[[ -z "${tags['done::wf::postbox']}" ]] &&
+		exit 0
+		exit 1
+	)
+}
+
+idx_workflow_postbox_done() {
+	bim_yesno "Are you sure that workflow postbox is completed for ${idx_current_doc}?" || return 
+	idx tag done::wf::postbox <<< "${idx_current_doc_id}
 }

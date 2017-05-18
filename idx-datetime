@@ -1,0 +1,38 @@
+#!/bin/bash
+########################################################
+# This one sets an info to a file like a tag or a name #
+what=${1}
+if [[ "${what}" != "newer" ]] && [[ "${what}" != "older" ]]
+then
+	errcho "usage: idx datetime newer yyyy-mm-dd [hh:mm:ss]"
+	exit 1
+fi
+shift
+date=${1:=0000-00-00}
+shift
+tim=${1:=00:00:00}
+shift
+while read -r id
+do
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	
+	idxchkloc "${loc}" || continue
+
+	if [[ ! -f ${loc}/datetime ]]
+	then 
+		# we cant check for ts if there is none
+		continue
+	else
+		read -r sdate stim < ${loc}/datetime
+		sdate=${sdate}
+		stim=${stim}
+		if [[ "${sdate} ${stim}" > "${date} ${tim}" ]] && [[ "${what} = "newer" ]]
+		then
+			echo "${id}"
+		elif [[ "${sdate} ${stim}" < "${date} ${tim}" ]] && [[ "${what} = "older" ]]
+		then
+			echo "${id}"
+		fi
+	fi
+done
+

@@ -5,6 +5,7 @@ declare -A idx_edit_doc_entry+=(
 	["_01_ View document"]="idx_view_doc"
 	["_02_ View document information"]="idx_view_doc_info"
 	["_03_ View collection of document information"]="idx_view_doc_info_collection"
+	["_04_ Change date"]="idx_change_date"
 	["_04_ Set tag"]="idx_set_tag"
 	["_05_ Delete tag"]="idx_unset_tag"
 )
@@ -60,16 +61,32 @@ idx_view_doc_info_collection() {
 
 idx_unset_tag() {
 	read -e -p "tags > " -r tags
-	# shellcheck disable=SC2086
 	echo "${idx_current_doc_id}" | idx untag ${tags}
 	idx_show_info_detail tag
 }
 
 idx_set_tag() {
 	read -e -p "tags > " -r tags
-	# shellcheck disable=SC2086
 	echo "${idx_current_doc_id}" | idx tag ${tags}
 	idx_show_info_detail tag
 }
 
+idx_change_date() {
+	datestr=$(idx info datetime <<< "${idx_current_doc_id}" | ( 
+		read -r id name datestr
+		echo "${datestr}" 
+	) )
+	read -r -e -p "${idx_current_doc} ${id} datetime > " -i "${datestr}" date
+	if bim_yesno "Are you sure that you would change datetime to ${date}?"
+	then
+			echo Changing datetime of document to ${date}
+			idx set datetime "${date}" 
+			idx set year "${date:0:4}" 
+			idx set month "${date:5:2}" 
+			idx set day "${date:8:2}" 
+			idx set hour "${date:11:2}"
+			idx set minute "${date:14:2}" 
+			idx set second "${date:17:2}"
+		fi
+}
 
