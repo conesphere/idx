@@ -2,9 +2,11 @@
 ########################################################
 # This one sets an info to a file like a tag or a name #
 what=${1}
-if [[ "${what}" != "newer" ]] && [[ "${what}" != "older" ]]
+if [[ "${what}" != "newer" ]] && [[ "${what}" != "set" ]] && [[ "${what}" != "older" ]]
 then
 	errcho "usage: idx datetime newer yyyy-mm-dd [hh:mm:ss]"
+	errcho "usage: idx datetime older yyyy-mm-dd [hh:mm:ss]"
+	errcho "usage: idx datetime set yyyy-mm-dd [hh:mm:ss]"
 	exit 1
 fi
 shift
@@ -31,6 +33,16 @@ do
 			echo "${id}"
 		elif [[ "${sdate} ${stim}" < "${date} ${tim}" ]] && [[ "${what}" = "older" ]]
 		then
+			echo "${id}"
+		elif [[ "${what}" = "set" ]]
+		then
+			idx set datetime "${date} ${tim}" <<< "${id}" > /dev/null || continue
+			idx set year "${date:0:4}" <<< "${id}"  > /dev/null || continue
+			idx set month "${date:5:2}" <<< "${id}"  > /dev/null || continue
+			idx set day "${date:8:2}" <<< "${id}"  > /dev/null || continue
+			idx set hour "${tim:0:2}" <<< "${id}"  > /dev/null || continue
+			idx set minute "${tim:3:2}" <<< "${id}"  > /dev/null || continue
+			idx set second "${tim:6:2}" <<< "${id}"  > /dev/null || continue
 			echo "${id}"
 		fi
 	fi
