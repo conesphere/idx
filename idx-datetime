@@ -36,13 +36,13 @@ do
 			echo "${id}"
 		elif [[ "${what}" = "set" ]]
 		then
-			idx set datetime "${date} ${tim}" <<< "${id}" > /dev/null || continue
-			idx set year "${date:0:4}" <<< "${id}"  > /dev/null || continue
-			idx set month "${date:5:2}" <<< "${id}"  > /dev/null || continue
-			idx set day "${date:8:2}" <<< "${id}"  > /dev/null || continue
-			idx set hour "${tim:0:2}" <<< "${id}"  > /dev/null || continue
-			idx set minute "${tim:3:2}" <<< "${id}"  > /dev/null || continue
-			idx set second "${tim:6:2}" <<< "${id}"  > /dev/null || continue
+			idx set -x datetime "${date} ${tim}" <<< "${id}" > /dev/null || continue
+			idx set -x year "${date:0:4}" <<< "${id}"  > /dev/null || continue
+			idx set -x month "${date:5:2}" <<< "${id}"  > /dev/null || continue
+			idx set -x day "${date:8:2}" <<< "${id}"  > /dev/null || continue
+			idx set -x hour "${tim:0:2}" <<< "${id}"  > /dev/null || continue
+			idx set -x minute "${tim:3:2}" <<< "${id}"  > /dev/null || continue
+			idx set -x second "${tim:6:2}" <<< "${id}"  > /dev/null || continue
 			echo "${id}"
 		fi
 	fi

@@ -2,6 +2,18 @@
 # shellcheck disable=SC2094
 ########################################################
 # This one sets an info to a file like a tag or a name #
+while [[ "${1}" = -* ]] && [[ -n "${1}" ]]
+do
+	if [[ ${1} == "-x" ]]
+	then
+		set_xclusive="true"
+		shift
+		continue
+	fi
+	errcho "I dont understand parameter ${1}"
+	shift
+	continue
+done
 name="${1}"
 shift
 while read -r id
@@ -10,6 +22,10 @@ do
 	
 	idxchkloc "${loc}" || continue
 
+	if [[ "${set_xclusive}" == "true" ]]
+	then
+		echo -n > "${loc}/${name}"	
+	fi
 	if [[ ! -f "${loc}/${name}" ]]
 	then 
 		# we dont have to check if there are no tags yet 
