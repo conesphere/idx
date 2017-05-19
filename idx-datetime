@@ -23,13 +23,13 @@ do
 		# we cant check for ts if there is none
 		continue
 	else
-		read -r sdate stim < ${loc}/datetime
+		read -r sdate stim < "${loc}/datetime"
 		sdate=${sdate}
 		stim=${stim}
-		if [[ "${sdate} ${stim}" > "${date} ${tim}" ]] && [[ "${what} = "newer" ]]
+		if [[ "${sdate} ${stim}" > "${date} ${tim}" ]] && [[ "${what}" = "newer" ]]
 		then
 			echo "${id}"
-		elif [[ "${sdate} ${stim}" < "${date} ${tim}" ]] && [[ "${what} = "older" ]]
+		elif [[ "${sdate} ${stim}" < "${date} ${tim}" ]] && [[ "${what}" = "older" ]]
 		then
 			echo "${id}"
 		fi
