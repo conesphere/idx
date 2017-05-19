@@ -1,0 +1,26 @@
+#!/bin/bash
+# shellcheck disable=SC2094
+########################################################
+# this scripts creates a parent child relationship 
+parent="${1}"
+shift
+while read -r id
+do
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	ploc="${IDX_DIR}"/$(idxpand "${parent}")
+	
+	idxchkloc "${ploc}" || continue
+	idxchkloc "${loc}" || continue
+	
+	if [[ -f "${loc}/parent" ]]
+	then
+		errcho "${id} already has a parent, skipping"
+		continue
+	fi
+
+	# here we do the real work 
+	idx set parent "${parent}" <<< "${id}"
+	idx set child "${id}" <<< "${parent}"
+
+	echo "${id}"
+done

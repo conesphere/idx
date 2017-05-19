@@ -1,0 +1,28 @@
+#!/bin/bash
+# shellcheck disable=SC2094
+########################################################
+# this scripts creates a parent child relationship 
+while read -r id
+do
+	loc="${IDX_DIR}"/$(idxpand "${id}")
+	
+	idxchkloc "${loc}" || continue
+	
+	idx info tag <<< "${id}" | (
+		declare -a taglst
+		# shellcheck disable=SC2034
+		while read -r sid name tag
+		do
+			if [[ "${tag}" = deprecated::* ]]
+			then
+				taglst+=("${tag}")
+			else
+				taglst+=("deprecated::${tag}")
+			fi
+		done
+		idx set -x tag "${taglst[@]}" <<< "${id}"
+		idx set tag "deprecated" <<< "${id}"
+	) 
+
+	echo "${id}"
+done
