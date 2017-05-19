@@ -57,13 +57,7 @@ do
 	if [[ ! -f "${loc}/datetime" ]]
 	then
 		date=$(date '+%Y-%m-%d %H:%M:%S')
-		echo "${date}" > "${loc}/datetime"
-		echo "${date:0:4}" > "${loc}/year"
-		echo "${date:5:2}" > "${loc}/month"
-		echo "${date:8:2}" > "${loc}/day"
-		echo "${date:11:2}" > "${loc}/hour"
-		echo "${date:14:2}" > "${loc}/minute"
-		echo "${date:17:2}" > "${loc}/second"
+		idx datetime set "${date:0:10}" "${date:11:8}" <<< "${id}" > /dev/null
 	fi
 	if [[ ! -f "${loc}/mimetype" ]]
 	then
