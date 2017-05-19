@@ -19,8 +19,7 @@ do
 	fi
 
 	# here we do the real work 
+	idx set child "${id}" <<< "${parent}" > /dev/null
 	idx set parent "${parent}" <<< "${id}"
-	idx set child "${id}" <<< "${parent}"
 
-	echo "${id}"
 done

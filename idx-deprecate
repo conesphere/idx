@@ -20,9 +20,7 @@ do
 				taglst+=("deprecated::${tag}")
 			fi
 		done
-		idx set -x tag "${taglst[@]}" <<< "${id}"
+		idx set -x tag "${taglst[@]}" <<< "${id}" > /dev/null
 		idx set tag "deprecated" <<< "${id}"
 	) 
-
-	echo "${id}"
 done
