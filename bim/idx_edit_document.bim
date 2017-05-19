@@ -79,14 +79,8 @@ idx_change_date() {
 	read -r -e -p "${idx_current_doc} ${id} datetime > " -i "${datestr}" date
 	if bim_yesno "Are you sure that you would change datetime to ${date}?"
 	then
-		echo Changing datetime of document to ${date}
-		idx set datetime "${date}" 
-		idx set year "${date:0:4}" 
-		idx set month "${date:5:2}" 
-		idx set day "${date:8:2}" 
-		idx set hour "${date:11:2}"
-		idx set minute "${date:14:2}" 
-		idx set second "${date:17:2}"
+		echo Changing datetime of document to "${date:0:10}" "${date:11:8}"
+		idx datetime set "${date:0:10}" "${date:11:8}" <<< "${idx_current_doc_id}" 
 	fi
 }
 
