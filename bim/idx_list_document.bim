@@ -1,6 +1,8 @@
 #!/bin/bash
 # shellcheck disable=SC2154
 
+declare -x -A idx_doc_list_entry=()
+
 declare -a idx_doc_list_topic+=("idx documents")
 declare -A idx_doc_list_reply+=(
 	["f"]="idx_doc_list_filter"
@@ -11,8 +13,10 @@ declare -A idx_doc_list_reply_help+=(
 	["g"]="do a full text search on the selection"
 )
 
-idx_doc_list() {
+idx_doc_list_setup() {
 	cnt=0
+	# first empty doc_list_entry
+	declare -x -g -A idx_doc_list_entry=()
 	for file in *
 	do
 		if [[ ! -f "${file}" ]]
@@ -27,11 +31,10 @@ idx_doc_list() {
 				cnt=$((cnt+1))
 				cstr=$(printf "%06i" "${cnt}")
 				# we have an indexed document here, this is what we want 
-				declare -x -A idx_doc_list_entry+=(["_${cstr}_ ${file}"]="idx_edit_doc")
+				declare -x -g -A idx_doc_list_entry+=(["_${cstr}_ ${file}"]="idx_edit_doc")
 			fi
 		fi
 	done
-	bim_show idx_doc_list
 }
 
 idx_doc_list_filter() {
@@ -39,7 +42,7 @@ idx_doc_list_filter() {
 	read -p "$ idx filter " -a cmd
 	NEWPATH=$(ls * | idx file2id | idx filter "${cmd[@]}" | idx get -T)
 	cd "${NEWPATH}"
-	idx_doc_list
+	bim_show idx_doc_list idx_doc_list_setup
 	cd "${OLDPATH}"
 }
 
@@ -48,7 +51,7 @@ idx_doc_list_greptext() {
 	read -p "$ idx greptext " -a cmd
 	NEWPATH=$(ls * | idx file2id | idx greptext "${cmd[@]}" | idx get -T)
 	cd "${NEWPATH}"
-	idx_doc_list
+	bim_show idx_doc_list idx_doc_list_setup
 	cd "${OLDPATH}"
 }
 
